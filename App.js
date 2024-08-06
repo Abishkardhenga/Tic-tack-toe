@@ -1,62 +1,100 @@
 import { StatusBar } from 'expo-status-bar';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { router } from 'expo-router';
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
+import { Cross } from "./constants/icons"
+import { Pen } from "./constants/icons"
+import { Circle } from "./constants/icons"
 export default function App() {
 
     const [Winner, setWinner] = useState("")
     const [isCross, setIsCross] = useState(false)
-    const [gameState, setGameState] = useState(new Array("Empty", 0, 9))
-    console.log("this is game State", gameState)
+    const [gameState, setGameState] = useState(new Array(9).fill("Empty"));
 
+    console.log("this is game State", gameState.includes("Empty", 0))
+
+
+    const resetState = () => {
+        setWinner("")
+        setIsCross(false)
+        setGameState(new Array(9).fill("Empty"))
+    }
 
     const isWinner = () => {
-        // for horizontal
-        if (gameState !== "Empty" && gameState[0] == gameStateState[1]
-            && gameState[1] == gameStateState[2]) {
-
-            setWinner(gameState[0])
+        // for horizontal check
+        if (gameState[0] !== "Empty" && gameState[0] === gameState[1] && gameState[1] === gameState[2]) {
+            setWinner(`${gameState[0]} wins the game`);
+        } else if (gameState[3] !== "Empty" && gameState[3] === gameState[4] && gameState[4] === gameState[5]) {
+            setWinner(`${gameState[3]} wins the game`);
+        } else if (gameState[6] !== "Empty" && gameState[6] === gameState[7] && gameState[7] === gameState[8]) {
+            setWinner(`${gameState[6]} wins the game`);
         }
-        else if (gameState !== "Empty" && gameState[3] == gameStateState[4]
-            && gameState[4] == gameStateState[5]) {
-            setWinner(gameState(3))
-
+        // for vertical  check
+        else if (gameState[0] !== "Empty" && gameState[0] === gameState[3] && gameState[3] === gameState[6]) {
+            setWinner(`${gameState[0]} wins the game`);
+        } else if (gameState[1] !== "Empty" && gameState[1] === gameState[4] && gameState[4] === gameState[7]) {
+            setWinner(`${gameState[1]} wins the game`);
+        } else if (gameState[2] !== "Empty" && gameState[2] === gameState[5] && gameState[5] === gameState[8]) {
+            setWinner(`${gameState[2]} wins the game`);
         }
-        else if (gameState !== "Empty" && gameState[6] == gameStateState[7]
-            && gameState[7] == gameStateState[8]) {
-            setWinner(gameState(6))
-
+        // for cross check
+        else if (gameState[0] !== "Empty" && gameState[0] === gameState[4] && gameState[4] === gameState[8]) {
+            setWinner(`${gameState[0]} wins the game`);
+        } else if (gameState[2] !== "Empty" && gameState[2] === gameState[4] && gameState[4] === gameState[6]) {
+            setWinner(`${gameState[2]} wins the game`);
         }
-        else if (gameState !== "Empty" && gameState[6] == gameStateState[7]
-            && gameState[7] == gameStateState[8]) {
-            setWinner(gameState(6))
-
+        // check for draw
+        else if (!gameState.includes("Empty", 0)) {
+            setWinner('Draw game... ⌛️');
         }
-
-
-
     }
+
+
+    const onChange = (itemNumber) => {
+        if (Winner) {
+            Snackbar.show({
+                text: Winner,
+                duration: Snackbar.LENGTH_SHORT,
+            });
+        }
+        else if (gameState[itemNumber] == "Empty") {
+            gameState[itemNumber] == isCross ? "Cross" : "Circle"
+            setIsCross(!isCross)
+        }
+        else {
+            return Snackbar.show({
+                text: "Position is Already filled",
+                duration: Snackbar.LENGTH_SHORT,
+            });
+        }
+        isWinner()
+    }
+
+
     return (
-        <View style={styles.container}>
-            <Text>Open up App.js to start working on your app!</Text>
-            <StatusBar style="auto" />
-            <Pressable onLongPress={() => (
-                router.replace("/Setting")
-            )}>
-                <Text>
-                    Setting
+        <SafeAreaView style={styles.safeArea}>
+            <View style={styles.container}>
+                <Text style={styles.title}>
+                    Tick Tack Toe
                 </Text>
-            </Pressable>
-        </View>
+            </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#000000',
+    },
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    title: {
+        color: '#FFFFFF',
+        fontSize: 24,
     },
 });
