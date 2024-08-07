@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import { FlatList, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useState } from 'react';
 
-
 import Card from '../components/Card';
 import Toast from 'react-native-toast-message';
 
@@ -11,8 +10,6 @@ export default function App() {
     const [Winner, setWinner] = useState("");
     const [isCross, setIsCross] = useState(false);
     const [gameState, setGameState] = useState(new Array(9).fill("Empty", 0, 9));
-
-    console.log("this is game State", gameState.includes("Empty", 0))
 
     const resetState = () => {
         setWinner("");
@@ -29,7 +26,7 @@ export default function App() {
         } else if (gameState[6] !== "Empty" && gameState[6] === gameState[7] && gameState[7] === gameState[8]) {
             setWinner(`${gameState[6]} wins the game`);
         }
-        // for vertical  check
+        // for vertical check
         else if (gameState[0] !== "Empty" && gameState[0] === gameState[3] && gameState[3] === gameState[6]) {
             setWinner(`${gameState[0]} wins the game`);
         } else if (gameState[1] !== "Empty" && gameState[1] === gameState[4] && gameState[4] === gameState[7]) {
@@ -49,15 +46,14 @@ export default function App() {
         }
     }
 
-    const onChangeText = (itemNumber) => {
+    const onChangeText = (itemNumber:number) => {
         if (Winner) {
             Toast.show({
                 type: 'success',
                 text1: Winner,
             });
-            return Winner;
         }
-        else if (gameState[itemNumber] == "Empty") {
+        else if (gameState[itemNumber] === "Empty") {
             gameState[itemNumber] = isCross ? "Cross" : "Circle";
             setIsCross(!isCross);
         }
@@ -66,7 +62,6 @@ export default function App() {
                 type: 'error',
                 text1: "Position is already filled",
             });
-            return "Position is already filled";
         }
         isWinner();
     }
@@ -75,24 +70,16 @@ export default function App() {
         <SafeAreaView style={styles.safeArea}>
             <StatusBar />
             <View style={styles.container}>
-                <Text style={styles.title}>
-                    Tick Tack Toe
-                </Text>
-                {
-                    Winner ? (
-                        <View style={[styles.WinnerInfo]}>
-                            <Text style={styles.WinnerText}>
-                                {Winner}
-                            </Text>
-                        </View>
-                    ) : (
-                        <View style={[isCross ? styles.playerX : styles.playerO]}>
-                            <Text style={styles.playerTurn}>
-                                Player {isCross ? "X" : "O"}'s turn
-                            </Text>
-                        </View>
-                    )
-                }
+                <Text style={styles.title}>Tic Tac Toe</Text>
+                {Winner ? (
+                    <View style={styles.WinnerInfo}>
+                        <Text style={styles.WinnerText}>{Winner}</Text>
+                    </View>
+                ) : (
+                    <View style={[styles.playerIndicator, isCross ? styles.playerX : styles.playerO]}>
+                        <Text style={styles.playerTurn}>Player {isCross ? "X" : "O"}'s turn</Text>
+                    </View>
+                )}
                 <FlatList
                     data={gameState}
                     style={styles.grid}
@@ -104,21 +91,14 @@ export default function App() {
                         </Pressable>
                     )}
                 />
-            <View>
-
-
-                    <Pressable onPress={resetState}>
-                    <Text>
-Start New Game
-                    </Text>
-                        </Pressable>  
-                    <Pressable onPress={resetState}>
-                    <Text>
-Restart
-                    </Text>
-                        </Pressable>  
-                
-            </View>
+                <View style={styles.buttonContainer}>
+                    <Pressable onPress={resetState} style={styles.button}>
+                        <Text style={styles.buttonText}>Start New Game</Text>
+                    </Pressable>
+                    <Pressable onPress={resetState} style={styles.button}>
+                        <Text style={styles.buttonText}>Reset</Text>
+                    </Pressable>
+                </View>
             </View>
         </SafeAreaView>
     );
@@ -127,7 +107,7 @@ Restart
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#e0f7fa',
     },
     container: {
         flex: 1,
@@ -136,48 +116,65 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     title: {
-        color: '#333',
-        fontSize: 28,
+        color: '#00796b',
+        fontSize: 32,
         fontWeight: 'bold',
         marginBottom: 20,
     },
     WinnerInfo: {
         padding: 10,
-        backgroundColor: '#4caf50',
+        backgroundColor: '#00796b',
         borderRadius: 5,
         marginBottom: 20,
     },
     WinnerText: {
         color: '#fff',
-        fontSize: 18,
+        fontSize: 20,
+    },
+    playerIndicator: {
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 20,
     },
     playerX: {
-        padding: 10,
-        backgroundColor: '#2196f3',
-        borderRadius: 5,
-        marginBottom: 20,
+        backgroundColor: '#004d40',
     },
     playerO: {
-        padding: 10,
-        backgroundColor: '#ff5722',
-        borderRadius: 5,
-        marginBottom: 20,
+        backgroundColor: '#ff6f00',
     },
     playerTurn: {
         color: '#fff',
         fontSize: 18,
     },
     grid: {
-        flex: 1,
         width: '100%',
     },
     cell: {
         flex: 1,
         height: 100,
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: '#b2dfdb',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#fff',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        paddingHorizontal: 20,
+        marginTop: 20,
+    },
+    button: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+        backgroundColor: '#004d40',
+        borderRadius: 5,
+        marginHorizontal: 10,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
     },
 });
