@@ -13,9 +13,10 @@
     "expo": "~51.0.24",
     "expo-router": "^3.5.20",
     "expo-status-bar": "~1.12.1",
+    "link": "^2.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.74.3",
+    "react-native": "^0.74.3",
     "react-native-snackbar": "^2.6.2",
     "react-native-web": "~0.19.10"
   },

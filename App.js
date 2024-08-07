@@ -1,11 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
 import { Cross } from "./constants/icons"
 import { Pen } from "./constants/icons"
 import { Circle } from "./constants/icons"
+import Card from './src/component/Card';
+import Snackbar from 'react-native-snackbar';
 export default function App() {
 
     const [Winner, setWinner] = useState("")
@@ -51,12 +53,13 @@ export default function App() {
     }
 
 
-    const onChange = (itemNumber) => {
+    const onChangeText = (itemNumber) => {
         if (Winner) {
-            Snackbar.show({
-                text: Winner,
-                duration: Snackbar.LENGTH_SHORT,
-            });
+            // Snackbar.show({
+            //     text: Winner,
+
+            // });
+            return Winner;
         }
         else if (gameState[itemNumber] == "Empty") {
             gameState[itemNumber] == isCross ? "Cross" : "Circle"
@@ -74,10 +77,36 @@ export default function App() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+            <StatusBar />
             <View style={styles.container}>
                 <Text style={styles.title}>
                     Tick Tack Toe
                 </Text>
+                {
+                    Winner ? (
+                        <View style={[styles.WinnerInfo]}>
+                            <Text style={styles.WinnerText}>
+                                {Winner}
+                            </Text>
+                        </View>
+                    ) : (
+                        <View style={[isCross ? styles.playerX : styles.playerY]}>
+                            <Text style={styles.playerTurn}>
+                                Player  {isCross ? "X" : "Y"} turns :
+
+                            </Text>
+                        </View>
+                    )
+                }
+                <FlatList data={gameState}
+
+                    renderItem={
+
+                        ({ item, index }) => (
+                            <Pressable onPress={onChangeText(item)}>
+                                <Card name={item} />
+                            </Pressable>)}
+                />
             </View>
         </SafeAreaView>
     );
